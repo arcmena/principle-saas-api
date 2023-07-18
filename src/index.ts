@@ -7,17 +7,20 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const schema = await buildSchema({
-  resolvers,
-  validate: false,
-});
+const init = async () => {
+  const schema = await buildSchema({
+    resolvers,
+    validate: false,
+  });
 
-const server = new ApolloServer({ schema });
+  const server = new ApolloServer({ schema });
 
-const { url } = await startStandaloneServer(server, {
-  // @ts-ignore
-  context: () => ({ prisma }),
-  listen: { port: 4000 },
-});
+  const { url } = await startStandaloneServer(server, {
+    context: async () => ({ prisma }),
+    listen: { port: 4000 },
+  });
 
-console.log(`🚀  Server ready at: ${url}`);
+  console.log(`🚀  Server ready at: ${url}`);
+};
+
+init().catch(console.error);
