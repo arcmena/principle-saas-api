@@ -12,6 +12,32 @@ datasource db {
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  name    String?
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  /// @TypeGraphQL.omit(output: true)
+  password String
+
+  messages      Message[]
+  notifications Notification[]
+}
+
+model Message {
+  id        Int     @id @default(autoincrement())
+  firstName String
+  lastName  String
+  email     String
+  phone     String?
+  content   String  @db.VarChar(255)
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+}
+
+model Notification {
+  id      Int    @id @default(autoincrement())
+  message String
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
 }

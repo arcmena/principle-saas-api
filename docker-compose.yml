@@ -12,3 +12,15 @@ services:
       - ${DB_PORT}:5432
     volumes:
       - ./docker-data/db:/var/lib/postgresql/data/
+  rabbitmq:
+    image: rabbitmq:management
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    network_mode: "bridge"
+    volumes:
+      - ./docker-data/rabbitmq:/data/:/var/lib/rabbitmq/
+      - ./docker-data/rabbitmq:/log/:/var/log/rabbitmq
