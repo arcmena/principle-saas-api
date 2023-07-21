@@ -15,7 +15,7 @@ class RabbitMQService {
 
     const newConnection = await amqp.connect({
       hostname: process.env.RABBITMQ_HOST,
-      port: parseInt(process.env.RABBITMQ_PORT),
+      port: Number(process.env.RABBITMQ_PORT),
       username: process.env.RABBITMQ_USER,
       password: process.env.RABBITMQ_PASSWORD,
     });

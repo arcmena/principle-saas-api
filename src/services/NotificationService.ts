@@ -10,13 +10,13 @@ class NotificationService {
     });
 
     console.log(
-      `Notification created -> ${notification.id} for user ${notification.userId}`
+      `Notification created -> id:${notification.id} for user id:${notification.userId}`
     );
 
     return notification;
   }
 
-  async sendPush(message) {
+  async sendPush(message: string) {
     console.log(`Push notification sent -> ${message}`);
   }
 
