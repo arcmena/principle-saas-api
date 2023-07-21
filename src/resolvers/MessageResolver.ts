@@ -1,20 +1,40 @@
-import { Arg, Ctx, Field, Mutation, ObjectType, Resolver } from "type-graphql";
-import { MessageCreateInput } from "@generated/type-graphql";
+import { Arg, Ctx, Field, InputType, Mutation, Resolver } from "type-graphql";
 import { Context } from "../context";
 import RabbitMQService from "../services/RabbitMQService";
 
-class NewMessageInput extends MessageCreateInput {
+@InputType()
+export class NewMessageInput {
+  @Field()
   userId: number;
+
+  @Field()
+  firstName: string;
+
+  @Field()
+  lastName: string;
+
+  @Field()
+  email: string;
+
+  @Field()
+  phone?: string;
+
+  @Field()
+  content: string;
 }
 
 @Resolver()
 export default class MessageResolver {
   @Mutation((_returns) => Boolean)
-  collectMessage(
-    @Arg("data") newMessageData: MessageCreateInput,
+  async collectMessage(
+    @Arg("data") newMessageData: NewMessageInput,
     @Ctx() ctx: Context
-  ): boolean {
-    RabbitMQService.pushToQueue({ ...newMessageData });
+  ): Promise<boolean> {
+    const { prisma } = ctx;
+
+    await prisma.message.create({ data: { ...newMessageData } });
+
+    await RabbitMQService.pushToQueue({ ...newMessageData });
 
     return true;
   }
